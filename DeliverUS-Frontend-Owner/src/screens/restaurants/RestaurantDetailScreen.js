@@ -8,9 +8,30 @@ import * as GlobalStyles from '../../styles/GlobalStyles'
 
 export default function RestaurantDetailScreen ({ route }) {
   const { id } = route.params
+  const [restaurant, setRestaurant] = useState({})
+
+  useEffect(() => {
+    console.log('Loading restaurant details, please wait 1 second')
+    setTimeout(() => {
+      setRestaurant(getDetail(route.params.id))
+      console.log('Restaurant details loaded')
+    }, 1000)
+  }, [])
+
   return (
         <View style={styles.container}>
             <TextRegular style={{ fontSize: 16, alignSelf: 'center', margin: 20 }}>Restaurant details. Id: {id}</TextRegular>
+            <View style={styles.container}>
+            <TextRegular style={styles.textTitle}>{restaurant.name}</TextRegular>
+            <TextRegular style={styles.text}>{restaurant.description}</TextRegular>
+            <TextRegular style={styles.text}>shippingCosts: {restaurant.shippingCosts}</TextRegular>
+            <FlatList
+              style={styles.container}
+              data={restaurant.products}
+              renderItem={renderProduct}
+              keyExtractor={item => item.id.toString()}
+            />
+        </View>
         </View>
   )
 }
@@ -34,3 +55,14 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   }
 })
+const renderProduct = ({ item }) => {
+  return (
+    <Pressable
+      style={styles.row}
+      onPress={() => { }}>
+        <TextRegular>
+            {item.name}
+        </TextRegular>
+    </Pressable>
+  )
+}
